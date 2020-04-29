@@ -13,8 +13,14 @@ class StudyRecordCommentsController < ApplicationController
   end
 
   def destroy
-    StudyRecordComment.find(params[:id]).destroy
-    render json: params[:id]
+    comment = StudyRecordComment.find(params[:id])
+
+    if comment.user_id == @current_user.id
+      comment.destroy
+      render json: params[:id]
+    else
+      render json: params[:id], status: 401
+    end
   end
 
   private

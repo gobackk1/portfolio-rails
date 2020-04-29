@@ -6,6 +6,7 @@ class UsersController < ApplicationController
 
     if @user && @user.authenticate(params[:password])
       render json: {
+        id: @user.id,
         name: @user.name,
         token: @user.token,
         created_at: @user.created_at
@@ -20,6 +21,7 @@ class UsersController < ApplicationController
 
     if @user.save
       render json: {
+        id: @user.id,
         name: @user.name,
         token: @user.token,
         created_at: @user.created_at
