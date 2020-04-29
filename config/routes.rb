@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   scope :api do
     resources :users
     resources :study_records
+    resources :study_record_comments, only:[:create, :destroy]
     post '/login', to: 'users#login'
   end
 end

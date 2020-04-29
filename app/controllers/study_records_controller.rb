@@ -1,12 +1,12 @@
 class StudyRecordsController < ApplicationController
   before_action :current_user
   def index
-    @records = StudyRecord.all
+    @records = StudyRecord.all.to_json(include: [:study_record_comments])
     render json: @records
   end
 
   def show
-    @record = StudyRecord.find(params[:id])
+    @record = StudyRecord.find(params[:id]).to_json(include: [:study_record_comments])
     render json: @record
   end
 
@@ -17,7 +17,7 @@ class StudyRecordsController < ApplicationController
     if @record.save
       render json: @record
     else
-      render json: {errors: @record.errors.full_message}, status: 400
+      render json: {errors: @record.errors.full_message}
     end
   end
 
@@ -31,7 +31,7 @@ class StudyRecordsController < ApplicationController
     if @record.save
       render json: @record
     else
-      render json: {errors: @record.errors.full_message}, status: 400
+      render json: {errors: @record.errors.full_message}
     end
   end
 

@@ -9,8 +9,7 @@
 User.create!(
   name: "Example User",
   email: "example@test.com",
-  password: "foobar",
-  test: 'test'
+  password: "foobar"
 )
 
 10.times do |n|
@@ -23,3 +22,9 @@ User.create!(
     study_hours: n
   )
 end
+
+StudyRecordComment.create!(
+  user_id: 1,
+  study_record_id: 1,
+  comment_body: 'コメント'
+)
