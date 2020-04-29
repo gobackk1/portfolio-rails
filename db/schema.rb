@@ -16,6 +16,10 @@ ActiveRecord::Schema.define(version: 2020_04_26_234303) do
   enable_extension "plpgsql"
 
   create_table "study_records", force: :cascade do |t|
+    t.integer "user_id"
+    t.text "comment"
+    t.string "teaching_material"
+    t.float "study_hours"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -27,6 +31,7 @@ ActiveRecord::Schema.define(version: 2020_04_26_234303) do
     t.string "name"
     t.string "password_digest"
     t.string "token"
+    t.string "test"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["token"], name: "index_users_on_token", unique: true
   end

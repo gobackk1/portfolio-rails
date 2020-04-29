@@ -10,4 +10,16 @@ User.create!(
   name: "Example User",
   email: "example@test.com",
   password: "foobar",
+  test: 'test'
 )
+
+10.times do |n|
+  comment = "example comment #{n}"
+  teaching_material = "example teaching_material #{n}"
+  StudyRecord.create!(
+    user_id: 1,
+    comment: comment,
+    teaching_material: teaching_material,
+    study_hours: n
+  )
+end
