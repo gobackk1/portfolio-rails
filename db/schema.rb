@@ -16,11 +16,12 @@ ActiveRecord::Schema.define(version: 2020_04_29_080812) do
   enable_extension "plpgsql"
 
   create_table "study_record_comments", force: :cascade do |t|
-    t.integer "study_record_id"
+    t.bigint "study_record_id"
     t.integer "user_id"
     t.text "comment_body"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["study_record_id"], name: "index_study_record_comments_on_study_record_id"
   end
 
   create_table "study_records", force: :cascade do |t|
@@ -43,4 +44,5 @@ ActiveRecord::Schema.define(version: 2020_04_29_080812) do
     t.index ["token"], name: "index_users_on_token", unique: true
   end
 
+  add_foreign_key "study_record_comments", "study_records"
 end

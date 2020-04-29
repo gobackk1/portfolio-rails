@@ -2,7 +2,8 @@ class StudyRecordCommentsController < ApplicationController
   before_action :current_user
 
   def create
-    comment = StudyRecordComment.new(comment_params)
+    record = StudyRecord.find(params[:study_record_id])
+    comment = record.study_record_comments.new(comment_params)
     comment.user_id = @current_user.id
 
     if comment.save
@@ -13,7 +14,8 @@ class StudyRecordCommentsController < ApplicationController
   end
 
   def destroy
-    comment = StudyRecordComment.find(params[:id])
+    record = StudyRecord.find(params[:study_record_id])
+    comment = record.study_record_comments.find(params[:id])
 
     if comment.user_id == @current_user.id
       comment.destroy
@@ -25,6 +27,6 @@ class StudyRecordCommentsController < ApplicationController
 
   private
     def comment_params
-      params.permit(:comment_body, :study_record_id)
+      params.permit(:comment_body)
     end
 end
