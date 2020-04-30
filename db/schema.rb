@@ -10,10 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_29_080812) do
+ActiveRecord::Schema.define(version: 2020_04_30_131642) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "likes", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "study_record_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["study_record_id"], name: "index_likes_on_study_record_id"
+    t.index ["user_id", "study_record_id"], name: "index_likes_on_user_id_and_study_record_id", unique: true
+    t.index ["user_id"], name: "index_likes_on_user_id"
+  end
 
   create_table "study_record_comments", force: :cascade do |t|
     t.bigint "study_record_id"
@@ -44,5 +54,7 @@ ActiveRecord::Schema.define(version: 2020_04_29_080812) do
     t.index ["token"], name: "index_users_on_token", unique: true
   end
 
+  add_foreign_key "likes", "study_records"
+  add_foreign_key "likes", "users"
   add_foreign_key "study_record_comments", "study_records"
 end

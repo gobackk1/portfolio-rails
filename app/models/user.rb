@@ -2,8 +2,9 @@ class User < ApplicationRecord
   before_save :downcase_email
   has_secure_token
   has_secure_password
-  has_many :study_records
-  has_many :study_record_comments
+  has_many :study_records, dependent: :destroy
+  has_many :study_record_comments, dependent: :destroy
+  has_many :likes, dependent: :destroy
 
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
 
