@@ -19,7 +19,8 @@ User.create!(
     user_id: 1,
     comment: comment,
     teaching_material: teaching_material,
-    study_hours: n
+    study_hours: n,
+    study_genre_list: ["PHP", "JavaScript", "HTML"]
   )
 end
 

@@ -1,5 +1,6 @@
 class StudyRecordsController < ApplicationController
   before_action :current_user
+
   def index
     @records = StudyRecord.all.to_json(include: [:study_record_comments])
     render json: @records
@@ -26,7 +27,8 @@ class StudyRecordsController < ApplicationController
     @record.update_attributes(
       comment: params[:comment],
       teaching_material: params[:teaching_material],
-      study_hours: params[:study_hours]
+      study_hours: params[:study_hours],
+      tag_liset: params[:tag_list]
     )
     if @record.save
       render json: @record
@@ -42,6 +44,6 @@ class StudyRecordsController < ApplicationController
 
   private
     def study_record_params
-      params.permit(:comment, :teaching_material, :study_hours)
+      params.permit(:comment, :teaching_material, :study_hours, :study_genre_list)
     end
 end

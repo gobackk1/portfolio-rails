@@ -35,6 +35,8 @@ gem 'bcrypt', '~> 3.1.7'
 # Permit CORS
 gem 'rack-cors'
 
+gem 'acts-as-taggable-on'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
