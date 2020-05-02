@@ -10,7 +10,7 @@ class User < ApplicationRecord
 
   validates :name, presence: true, length: {in: 6..50}
   validates :email, presence: true ,uniqueness: {case_sensitive: true}, length: {maximum: 255}, format: {with: VALID_EMAIL_REGEX}
-  validates :password, presence: true, length: {in: 6..50}
+  validates :password, presence: true, length: {in: 6..50}, allow_nil: true
   validates :token, uniqueness: true
 
   def downcase_email

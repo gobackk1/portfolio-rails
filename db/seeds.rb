@@ -7,9 +7,16 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 User.create!(
-  name: "Example User",
-  email: "example@test.com",
-  password: "foobar"
+  name: "Example User1",
+  email: "example1@test.com",
+  password: "foobar",
+  user_bio:'Example User1',
+)
+User.create!(
+  name: "Example User2",
+  email: "example2@test.com",
+  password: "foobar",
+  user_bio:'Example User2',
 )
 
 10.times do |n|
