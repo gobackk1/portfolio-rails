@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   skip_before_action :authenticate!, only: [:login, :create]
-  before_action :current_user, only: [:update]
+  before_action :current_user, only: [:update, :show]
 
   def login
     @user = User.find_by(email: params[:email])
@@ -69,10 +69,15 @@ class UsersController < ApplicationController
     def render_profile(user)
       study_records = StudyRecord.where(user_id: user.id)
       total_study_hours = study_records.sum(:study_hours)
+      followings_count = user.followings.count
+      followers_count = user.followers.count
       render json: {
         user: user,
         study_records: study_records,
-        total_study_hours: total_study_hours
+        total_study_hours: total_study_hours,
+        followings_count: followings_count,
+        followers_count: followers_count,
+        is_following: @current_user.following?(user)
       }
     end
 end

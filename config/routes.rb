@@ -3,9 +3,10 @@ Rails.application.routes.draw do
   scope :api do
     resources :users
     resources :study_records do
-      resources :study_record_comments, only:[:create, :destroy]
+      resources :study_record_comments, only: [:create, :destroy]
     end
-    resources :likes, only:[:create, :destroy]
+    resources :likes, only: [:create, :destroy]
+    resources :relationships, only: [:create, :destroy]
     get 'likes/:id/all', to: 'likes#all'
     post '/login', to: 'users#login'
   end

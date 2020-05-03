@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_01_223423) do
+ActiveRecord::Schema.define(version: 2020_05_02_234528) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,6 +23,16 @@ ActiveRecord::Schema.define(version: 2020_05_01_223423) do
     t.index ["study_record_id"], name: "index_likes_on_study_record_id"
     t.index ["user_id", "study_record_id"], name: "index_likes_on_user_id_and_study_record_id", unique: true
     t.index ["user_id"], name: "index_likes_on_user_id"
+  end
+
+  create_table "relationships", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "follow_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["follow_id"], name: "index_relationships_on_follow_id"
+    t.index ["user_id", "follow_id"], name: "index_relationships_on_user_id_and_follow_id", unique: true
+    t.index ["user_id"], name: "index_relationships_on_user_id"
   end
 
   create_table "study_record_comments", force: :cascade do |t|
@@ -85,6 +95,8 @@ ActiveRecord::Schema.define(version: 2020_05_01_223423) do
 
   add_foreign_key "likes", "study_records"
   add_foreign_key "likes", "users"
+  add_foreign_key "relationships", "users"
+  add_foreign_key "relationships", "users", column: "follow_id"
   add_foreign_key "study_record_comments", "study_records"
   add_foreign_key "taggings", "tags"
 end

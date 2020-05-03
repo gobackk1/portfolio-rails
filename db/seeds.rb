@@ -18,6 +18,25 @@ User.create!(
   password: "foobar",
   user_bio:'Example User2',
 )
+User.create!(
+  name: "Example User3",
+  email: "example3@test.com",
+  password: "foobar",
+  user_bio:'Example User3',
+)
+
+Relationship.create!(
+  user_id: 1,
+  follow_id: 2
+)
+Relationship.create!(
+  user_id: 1,
+  follow_id: 3
+)
+Relationship.create!(
+  user_id: 2,
+  follow_id: 3
+)
 
 10.times do |n|
   comment = "example comment #{n}"
