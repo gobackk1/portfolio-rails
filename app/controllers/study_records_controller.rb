@@ -42,6 +42,12 @@ class StudyRecordsController < ApplicationController
     render json: params[:id]
   end
 
+  def search
+    keyword = params[:keyword]
+    records = StudyRecord.where("comment LIKE ? OR teaching_material LIKE ?", "%#{keyword}%", "%#{keyword}%")
+    render json: records
+  end
+
   private
     def study_record_params
       params.permit(:comment, :teaching_material, :study_hours, :study_genre_list)

@@ -33,7 +33,7 @@ class UsersController < ApplicationController
   end
 
   def index
-    @users = User.all
+    @users = User.select(:id, :name, :image_name, :user_bio)
     render json: @users
   end
 
@@ -91,6 +91,12 @@ class UsersController < ApplicationController
       study_time_per_week: study_time_per_week,
       report_by_teaching_material: report_by_teaching_material
     }
+  end
+
+  def search
+    keyword = params[:keyword]
+    users = User.where("name LIKE ? OR user_bio LIKE ?", "%#{keyword}%", "%#{keyword}%").select(:id, :name, :image_name, :user_bio)
+    render json: users
   end
 
   private

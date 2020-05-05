@@ -10,19 +10,19 @@ User.create!(
   name: "Example User1",
   email: "example1@test.com",
   password: "foobar",
-  user_bio:'Example User1',
+  user_bio:'i am auther',
 )
 User.create!(
   name: "Example User2",
   email: "example2@test.com",
   password: "foobar",
-  user_bio:'Example User2',
+  user_bio:'i am engineer',
 )
 User.create!(
   name: "Example User3",
   email: "example3@test.com",
   password: "foobar",
-  user_bio:'Example User3',
+  user_bio:'i am designer',
 )
 
 Relationship.create!(
@@ -38,18 +38,21 @@ Relationship.create!(
   follow_id: 3
 )
 
-10.times do |n|
-  comment = "example comment #{n}"
-  teaching_material = "example teaching_material"
-  StudyRecord.create!(
-    user_id: 1,
-    comment: comment,
-    teaching_material: teaching_material,
-    study_hours: n,
-    study_genre_list: ["PHP", "JavaScript", "HTML"],
-    created_at: "2020-05-#{n} 00:00:00",
-    updated_at: "2020-05-#{n} 00:00:00",
-  )
+5.times do |n|
+  3.times do |m|
+
+    comment = "example comment #{n + 1}"
+    teaching_material = "example teaching_material #{n + 1}"
+    StudyRecord.create!(
+      user_id: 1,
+      comment: comment,
+      teaching_material: teaching_material,
+      study_hours: n + 1,
+      study_genre_list: ["PHP", "JavaScript", "HTML"],
+      created_at: "2020-05-#{n + 1 + m} 00:00:00",
+      updated_at: "2020-05-#{n + 1 + m} 00:00:00",
+    )
+  end
 end
 
 StudyRecord.create!(
