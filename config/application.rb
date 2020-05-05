@@ -33,5 +33,8 @@ module Myapp
           methods: [:get, :post, :put, :delete, :options, :head]
       end
     end
+
+    config.time_zone = 'Asia/Tokyo'
+    config.i18n.default_locale = :ja
   end
 end

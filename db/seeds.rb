@@ -40,15 +40,27 @@ Relationship.create!(
 
 10.times do |n|
   comment = "example comment #{n}"
-  teaching_material = "example teaching_material #{n}"
+  teaching_material = "example teaching_material"
   StudyRecord.create!(
     user_id: 1,
     comment: comment,
     teaching_material: teaching_material,
     study_hours: n,
-    study_genre_list: ["PHP", "JavaScript", "HTML"]
+    study_genre_list: ["PHP", "JavaScript", "HTML"],
+    created_at: "2020-05-#{n} 00:00:00",
+    updated_at: "2020-05-#{n} 00:00:00",
   )
 end
+
+StudyRecord.create!(
+  user_id: 1,
+  comment: 'comment',
+  teaching_material: 'example another teaching_material',
+  study_hours: 2,
+  study_genre_list: ["PHP", "JavaScript", "HTML"],
+  created_at: '2020-05-11 00:00:00'
+)
+
 
 StudyRecordComment.create!(
   user_id: 1,
