@@ -8,7 +8,7 @@ class UsersController < ApplicationController
     if user && user.authenticate(params[:password])
       render json: process_user_for_response(user)
     else
-      render json: {message: 'メールアドレスかパスワードが間違っているようです。もう一度入力してください。'}, status: 401
+      render json: {messages: ['メールアドレスかパスワードが間違っているようです。もう一度入力してください。']}, status: 401
     end
   end
 
@@ -18,7 +18,7 @@ class UsersController < ApplicationController
     if user.save
       render json: process_user_for_response(user)
     else
-      render json: {errors: @user.errors.full_messages}
+      render json: {messages: user.errors.full_messages}, status: 401
     end
   end
 

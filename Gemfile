@@ -35,6 +35,9 @@ gem 'bcrypt', '~> 3.1.7'
 # Permit CORS
 gem 'rack-cors'
 
+# Translation of error messages into Japanese
+gem 'rails-i18n'
+
 gem 'acts-as-taggable-on'
 
 group :development, :test do
