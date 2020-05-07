@@ -6,7 +6,13 @@ class RelationshipsController < ApplicationController
     following = @current_user.follow(@user)
     if following.save
       render json: {
-        is_following: true,
+        user: {
+          id: @user.id,
+          is_following: true,
+          image_name: @user.image_name,
+          name: @user.name,
+          user_bio: @user.user_bio
+        },
         followers_count: @user.followers.count
       }
     else
@@ -19,7 +25,13 @@ class RelationshipsController < ApplicationController
     # TODO: もう一度Destroyする理由を調べる
     if following.destroy
       render json: {
-        is_following: false,
+        user: {
+          id: @user.id,
+          is_following: false,
+          image_name: @user.image_name,
+          name: @user.name,
+          user_bio: @user.user_bio
+        },
         followers_count: @user.followers.count
       }
     else

@@ -1,40 +1,39 @@
 class UsersController < ApplicationController
   skip_before_action :authenticate!, only: [:login, :create]
-  before_action :current_user, only: [:update, :show, :report]
+  before_action :current_user, only: [:update, :show, :report, :index]
 
   def login
-    @user = User.find_by(email: params[:email])
+    user = User.find_by(email: params[:email])
 
-    if @user && @user.authenticate(params[:password])
-      render json: {
-        id: @user.id,
-        name: @user.name,
-        token: @user.token,
-        created_at: @user.created_at
-      }
+    if user && user.authenticate(params[:password])
+      render json: process_user_for_response(user)
     else
-      render json: {errors: ['ログインに失敗しました']}, status: 401
+      render json: {message: 'メールアドレスかパスワードが間違っているようです。もう一度入力してください。'}, status: 401
     end
   end
 
   def create
-    @user = User.new(user_params)
+    user = User.new(user_params)
 
-    if @user.save
-      render json: {
-        id: @user.id,
-        name: @user.name,
-        token: @user.token,
-        created_at: @user.created_at
-      }
+    if user.save
+      render json: process_user_for_response(user)
     else
-      render json: {errors: @user.errors.full_messages}, status: 400
+      render json: {errors: @user.errors.full_messages}
     end
   end
 
   def index
-    @users = User.select(:id, :name, :image_name, :user_bio)
-    render json: @users
+    selected_users = User.select(:id, :name, :image_name, :user_bio)
+    users = selected_users.map do |user|
+      {
+        id: user.id,
+        name: user.name,
+        image_name: user.image_name,
+        user_bio: user.user_bio,
+        is_following: @current_user.following?(user)
+      }
+    end
+    render json: users
   end
 
   def show
@@ -104,14 +103,25 @@ class UsersController < ApplicationController
       params.permit(:name, :email, :password)
     end
 
+    def process_user_for_response(user)
+      {
+        id: user.id,
+        name: user.name,
+        token: user.token,
+      }
+    end
+
     def render_profile(user)
-      study_records = StudyRecord.where(user_id: user.id)
+      study_records = user.study_records
+      results = study_records.map do |record|
+        process_record_for_response(record)
+      end
       total_study_hours = study_records.sum(:study_hours)
       followings_count = user.followings.count
       followers_count = user.followers.count
       render json: {
         user: user,
-        study_records: study_records,
+        study_records: results,
         total_study_hours: total_study_hours,
         followings_count: followings_count,
         followers_count: followers_count,

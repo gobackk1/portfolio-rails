@@ -2,13 +2,17 @@ class StudyRecordsController < ApplicationController
   before_action :current_user
 
   def index
-    @records = StudyRecord.all.to_json(include: [:study_record_comments])
-    render json: @records
+    records = StudyRecord.all
+    result = records.map do |record|
+      process_record_for_response(record)
+    end
+
+    render json: result
   end
 
   def show
-    @record = StudyRecord.find(params[:id]).to_json(include: [:study_record_comments])
-    render json: @record
+    record = StudyRecord.find(params[:id])
+    render json: process_record_for_response(record)
   end
 
   def create
@@ -45,7 +49,10 @@ class StudyRecordsController < ApplicationController
   def search
     keyword = params[:keyword]
     records = StudyRecord.where("comment LIKE ? OR teaching_material LIKE ?", "%#{keyword}%", "%#{keyword}%")
-    render json: records
+    result = records.map do |record|
+      process_record_for_response(record)
+    end
+    render json: result
   end
 
   private

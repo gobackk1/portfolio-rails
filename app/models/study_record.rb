@@ -4,7 +4,7 @@ class StudyRecord < ApplicationRecord
   belongs_to :user
   acts_as_taggable_on :study_genres
 
-  def user
-    User.find(self.user_id)
-  end
+  # def user
+  #   User.find(self.user_id)
+  # end
 end
