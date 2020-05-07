@@ -23,7 +23,7 @@ class UsersController < ApplicationController
   end
 
   def index
-    selected_users = User.select(:id, :name, :image_name, :user_bio)
+    selected_users = User.where.not(id: @current_user.id).select(:id, :name, :image_name, :user_bio)
     users = selected_users.map do |user|
       {
         id: user.id,
