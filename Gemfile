@@ -38,6 +38,9 @@ gem 'rack-cors'
 # Translation of error messages into Japanese
 gem 'rails-i18n'
 
+# Dummy data generation of Japanese names
+gem 'gimei'
+
 gem 'acts-as-taggable-on'
 
 group :development, :test do
