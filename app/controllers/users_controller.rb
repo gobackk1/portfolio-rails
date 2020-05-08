@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   skip_before_action :authenticate!, only: [:login, :create]
-  before_action :current_user, only: [:update, :show, :report, :index]
+  before_action :current_user, only: [:update, :show, :report, :index, :search]
 
   def login
     user = User.find_by(email: params[:email])
@@ -94,7 +94,7 @@ class UsersController < ApplicationController
 
   def search
     keyword = params[:keyword]
-    users = User.where("name LIKE ? OR user_bio LIKE ?", "%#{keyword}%", "%#{keyword}%").select(:id, :name, :image_name, :user_bio)
+    users = User.where.not(id: @current_user.id).where("name LIKE ? OR user_bio LIKE ?", "%#{keyword}%", "%#{keyword}%").select(:id, :name, :image_name, :user_bio)
     render json: users
   end
 
@@ -121,6 +121,7 @@ class UsersController < ApplicationController
       followers_count = user.followers.count
       render json: {
         user: user,
+        registered_date: I18n.l(user.created_at, format: '%Y/%m/%d'),
         study_records: results,
         total_study_hours: total_study_hours,
         followings_count: followings_count,
