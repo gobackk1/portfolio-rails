@@ -70,8 +70,8 @@ study_record_count.times do |n|
       teaching_material: t_material[rand(4)],
       study_hours: rand(1..5),
       study_genre_list: genRandomTag(tag_list),
-      created_at: "2020-04-#{m + 1} 09:00:00",
-      updated_at: "2020-04-#{m + 1} 09:00:00",
+      created_at: "2020-05-#{m + 1} 09:00:00",
+      updated_at: "2020-05-#{m + 1} 09:00:00",
     )
   end
 end
