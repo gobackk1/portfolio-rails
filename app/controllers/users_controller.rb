@@ -81,6 +81,9 @@ class UsersController < ApplicationController
       study_hours = current_user_records.where(teaching_material: material).sum(:study_hours)
       report_by_teaching_material << {teaching_material: material, study_hours: study_hours}
     end
+    report_by_teaching_material.sort! do |a,b|
+      b[:study_hours] <=> a[:study_hours]
+    end
 
     render json: {
       study_hours: {
