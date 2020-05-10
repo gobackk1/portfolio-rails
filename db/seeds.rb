@@ -81,3 +81,8 @@ StudyRecordComment.create(
   study_record_id: 1,
   comment_body: 'コメント'
 )
+
+TeachingMaterial.create(
+  user_id: 1,
+  title: 'サンプル教材'
+)

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_02_234528) do
+ActiveRecord::Schema.define(version: 2020_05_10_055743) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -80,6 +80,13 @@ ActiveRecord::Schema.define(version: 2020_05_02_234528) do
     t.index ["name"], name: "index_tags_on_name", unique: true
   end
 
+  create_table "teaching_materials", force: :cascade do |t|
+    t.string "title"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -89,8 +96,10 @@ ActiveRecord::Schema.define(version: 2020_05_02_234528) do
     t.string "token"
     t.text "user_bio"
     t.string "image_name", default: "default.png"
+    t.bigint "{:foreign_key=>true}_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["token"], name: "index_users_on_token", unique: true
+    t.index ["{:foreign_key=>true}_id"], name: "index_users_on_{:foreign_key=>true}_id"
   end
 
   add_foreign_key "likes", "study_records"
