@@ -6,9 +6,9 @@ class TeachingMaterialsController < ApplicationController
     render json: materials
   end
 
-  def crate
+  def create
     material = TeachingMaterial.new(material_params)
-    material.user_id = @current_user.user_id
+    material.user_id = @current_user.id
 
     if material.save
       render json: material
