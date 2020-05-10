@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'teaching_materials/crate'
+  get 'teaching_materials/destroy'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   scope :api do
     resources :users
@@ -12,5 +14,6 @@ Rails.application.routes.draw do
     get '/likes/:id/all', to: 'likes#all'
     resources :relationships, only: [:create, :destroy]
     post '/login', to: 'users#login'
+    resources :teaching_materials, only: [:create, :destroy]
   end
 end
