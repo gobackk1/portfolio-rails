@@ -14,6 +14,9 @@ class ApplicationController < ActionController::Base
   end
 
   def process_record_for_response(record)
+    comments = record.study_record_comments.map do |c|
+      process_comment_for_response(c)
+    end
     {
       id: record.id,
       user: {
@@ -22,6 +25,19 @@ class ApplicationController < ActionController::Base
       },
       date: I18n.l(record.created_at),
       record: record,
+      comments: comments
+    }
+  end
+
+  def process_comment_for_response(comment)
+    {
+      id: comment.id,
+      user: {
+        image_name: comment.user.image_name,
+        name: comment.user.name
+      },
+      date: I18n.l(comment.created_at),
+      comment: comment
     }
   end
 end

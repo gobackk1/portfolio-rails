@@ -7,7 +7,7 @@ class StudyRecordCommentsController < ApplicationController
     comment.user_id = @current_user.id
 
     if comment.save
-      render json: comment
+      render json: process_comment_for_response(comment)
     else
       render json: {errors: comment.errors.full_message}
     end
@@ -19,7 +19,10 @@ class StudyRecordCommentsController < ApplicationController
 
     if comment.user_id == @current_user.id
       comment.destroy
-      render json: params[:id]
+      render json: {
+        id: params[:id].to_i,
+        study_record_id: params[:study_record_id].to_i
+      }
     else
       render json: params[:id], status: 401
     end
