@@ -9,7 +9,7 @@ class RelationshipsController < ApplicationController
         user: {
           id: @user.id,
           is_following: true,
-          image_name: @user.image_name,
+          image_url: @user.image_url,
           name: @user.name,
           user_bio: @user.user_bio
         },
@@ -28,7 +28,7 @@ class RelationshipsController < ApplicationController
         user: {
           id: @user.id,
           is_following: false,
-          image_name: @user.image_name,
+          image_url: @user.image_url,
           name: @user.name,
           user_bio: @user.user_bio
         },

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_10_055743) do
+ActiveRecord::Schema.define(version: 2020_05_12_235232) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -95,7 +95,7 @@ ActiveRecord::Schema.define(version: 2020_05_10_055743) do
     t.string "password_digest"
     t.string "token"
     t.text "user_bio"
-    t.string "image_name", default: "default.png"
+    t.string "image_url", default: "/images/user_images/default.png"
     t.bigint "{:foreign_key=>true}_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["token"], name: "index_users_on_token", unique: true

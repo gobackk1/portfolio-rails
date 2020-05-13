@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
     {
       id: record.id,
       user: {
-        image_name: record.user.image_name,
+        image_url: record.user.image_url,
         name: record.user.name
       },
       date: I18n.l(record.created_at),
@@ -33,7 +33,7 @@ class ApplicationController < ActionController::Base
     {
       id: comment.id,
       user: {
-        image_name: comment.user.image_name,
+        image_url: comment.user.image_url,
         name: comment.user.name
       },
       date: I18n.l(comment.created_at),

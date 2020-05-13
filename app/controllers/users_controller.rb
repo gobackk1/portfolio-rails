@@ -23,12 +23,12 @@ class UsersController < ApplicationController
   end
 
   def index
-    selected_users = User.where.not(id: @current_user.id).select(:id, :name, :image_name, :user_bio)
+    selected_users = User.where.not(id: @current_user.id).select(:id, :name, :image_url, :user_bio)
     users = selected_users.map do |user|
       {
         id: user.id,
         name: user.name,
-        image_name: user.image_name,
+        image_url: user.image_url,
         user_bio: user.user_bio,
         is_following: @current_user.following?(user)
       }
@@ -45,10 +45,12 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     @user.user_bio = params[:user_bio]
     if @current_user.id == params[:id].to_i
-      if params[:image]
-        @user.image_name = "#{@user.id}.jpg"
-        image = params[:image]
-        File.binwrite("public/api/images/user_images/#{@user.image_name}", Base64.decode64(image))
+      if params[:image_select]
+        FileUtils.rm_rf("public/api/images/user_images/#{@user.id}")
+        @user.image_url = "/images/user_images/#{@user.id}/#{@user.id}-#{Time.now.to_i}.jpg"
+        image = params[:image_select]
+        Dir.mkdir("public/api/images/user_images/#{@user.id}")
+        File.binwrite("public/api/#{@user.image_url}", Base64.decode64(image))
       end
       if @user.save
         render_profile @user
@@ -98,7 +100,7 @@ class UsersController < ApplicationController
 
   def search
     keyword = params[:keyword]
-    users = User.where.not(id: @current_user.id).where("name LIKE ? OR user_bio LIKE ?", "%#{keyword}%", "%#{keyword}%").select(:id, :name, :image_name, :user_bio)
+    users = User.where.not(id: @current_user.id).where("name LIKE ? OR user_bio LIKE ?", "%#{keyword}%", "%#{keyword}%").select(:id, :name, :image_url, :user_bio)
     render json: users
   end
 
@@ -124,7 +126,13 @@ class UsersController < ApplicationController
       followings_count = user.followings.count
       followers_count = user.followers.count
       render json: {
-        user: user,
+        # TODO: もっと良い書き方があるはず
+        user: {
+          id: user.id,
+          user_bio: user.user_bio,
+          image_url: user.image_url,
+          name: user.name
+        },
         registered_date: I18n.l(user.created_at, format: '%Y/%m/%d'),
         study_records: results,
         total_study_hours: total_study_hours,
