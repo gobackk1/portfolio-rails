@@ -15,3 +15,7 @@
 
 # Ignore Byebug command history file.
 .byebug_history
+
+
+# ユーザー画像は管理しない
+public/api/images/user_images
