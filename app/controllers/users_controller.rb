@@ -44,6 +44,7 @@ class UsersController < ApplicationController
   def update
     @user = User.find(params[:id])
     @user.user_bio = params[:user_bio]
+    # TODO: 後で見直す
     if @current_user.id == params[:id].to_i
       if params[:image_select]
         FileUtils.rm_rf("public/api/images/user_images/#{@user.id}")

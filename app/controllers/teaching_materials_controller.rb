@@ -11,6 +11,12 @@ class TeachingMaterialsController < ApplicationController
     material.user_id = @current_user.id
 
     if material.save
+      if params[:image_select]
+        path = "/images/user_images/#{@current_user.id}"
+        material.update_attribute(:image_url, "#{path}/#{material.id}/#{Time.now.to_i}.jpg")
+        Dir.mkdir("public/api/#{path}/#{material.id}")
+        File.binwrite("public/api/#{material.image_url}", Base64.decode64(params[:image_select]))
+      end
       render json: material
     else
       render json: {messages: material.errors.full_message}
