@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   scope :api do
     resources :users do
-      resources :teaching_materials, only: [:create, :destroy, :index]
+      resources :teaching_materials, only: [:create, :destroy, :index, :update]
     end
     get '/users/:id/report', to: 'users#report'
     post '/users/search', to: 'users#search'
