@@ -1,4 +1,6 @@
 class StudyRecord < ApplicationRecord
+  include CommonModule
+
   has_many :study_record_comments, dependent: :destroy
   has_many :likes, dependent: :destroy
   belongs_to :user

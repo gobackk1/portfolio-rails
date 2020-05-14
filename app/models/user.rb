@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  include CommonModule
+
   before_save :downcase_email
   has_secure_token
   has_secure_password
@@ -38,4 +40,5 @@ class User < ApplicationRecord
   def following?(other_user)
     self.followings.include?(other_user)
   end
+
 end

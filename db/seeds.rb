@@ -76,11 +76,13 @@ study_record_count.times do |n|
   end
 end
 
-StudyRecordComment.create(
-  user_id: 1,
-  study_record_id: 1,
-  comment_body: 'コメント'
-)
+30.times do |n|
+  StudyRecordComment.create(
+    user_id: 1,
+    study_record_id: 1,
+    comment_body: "コメント#{n}"
+  )
+end
 
 TeachingMaterial.create(
   user_id: 1,
