@@ -18,8 +18,12 @@ class StudyRecordsController < ApplicationController
   def create
     record = StudyRecord.new(study_record_params)
     record.user_id = @current_user.id
+    record.image_url = params[:image_url] if params[:image_url]
 
     if record.save
+      if params[:image_select]
+        set_image record, params[:image_select]
+      end
       render json: process_record_for_response(record)
     else
       render json: {messages: record.errors.full_message}
@@ -35,6 +39,10 @@ class StudyRecordsController < ApplicationController
       study_genre_list: params[:study_genre_list]
     )
     if record.save
+      if params[:image_select]
+        FileUtils.rm_rf "public/api/images/user_images/#{record.user_id}/study_records/#{record.id}"
+        set_image record, params[:image_select]
+      end
       render json: process_record_for_response(record)
     else
       render json: {messages: record.errors.full_message}
@@ -58,5 +66,12 @@ class StudyRecordsController < ApplicationController
   private
     def study_record_params
       params.permit(:comment, :teaching_material, :study_hours, :study_genre_list)
+    end
+
+    def set_image(record, image)
+      path = "/images/user_images/#{record.user_id}/study_records"
+      record.update_attribute(:image_url, "#{path}/#{record.id}/#{Time.now.to_i}.jpg")
+      FileUtils.mkdir_p("public/api/#{path}/#{record.id}")
+      File.binwrite("public/api/#{record.image_url}", Base64.decode64(params[:image_select]))
     end
 end

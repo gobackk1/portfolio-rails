@@ -26,7 +26,7 @@ class TeachingMaterialsController < ApplicationController
 
     if material.save
       if params[:image_select]
-        FileUtils.rm_rf("public/api/images/user_images/#{material.user_id}/#{material.id}")
+        FileUtils.rm_rf("public/api/images/user_images/#{material.user_id}/teaching_materials/#{material.id}")
         set_image material, params[:image_select]
       end
       render json: material
@@ -53,9 +53,9 @@ class TeachingMaterialsController < ApplicationController
     end
 
     def set_image(material, image)
-      path = "/images/user_images/#{material.user_id}"
+      path = "/images/user_images/#{material.user_id}/teaching_materials"
       material.update_attribute(:image_url, "#{path}/#{material.id}/#{Time.now.to_i}.jpg")
-      Dir.mkdir("public/api/#{path}/#{material.id}")
+      FileUtils.mkdir_p("public/api/#{path}/#{material.id}")
       File.binwrite("public/api/#{material.image_url}", Base64.decode64(params[:image_select]))
     end
 end
