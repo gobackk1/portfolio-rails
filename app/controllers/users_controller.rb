@@ -100,7 +100,7 @@ class UsersController < ApplicationController
   end
 
   def search
-    # Book::ActiveRecord_Relation にはscopeが使えない？
+    # NOTE: Book::ActiveRecord_Relation にはscopeが使えない？
     keyword = params[:keyword]
     num = params[:page].to_i.positive? ? params[:page].to_i - 1 : 0
     per = params[:per]

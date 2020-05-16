@@ -55,8 +55,11 @@ class StudyRecordsController < ApplicationController
   end
 
   def search
+    # NOTE: Book::ActiveRecord_Relation にはscopeが使えない？
     keyword = params[:keyword]
-    records = StudyRecord.where("comment LIKE ? OR teaching_material LIKE ?", "%#{keyword}%", "%#{keyword}%").order(id: :DESC)
+    num = params[:page].to_i.positive? ? params[:page].to_i - 1 : 0
+    per = params[:per]
+    records = StudyRecord.where("comment LIKE ? OR teaching_material LIKE ?", "%#{keyword}%", "%#{keyword}%").limit(per).offset(per * num).order(id: :DESC)
     result = records.map do |record|
       process_record_for_response(record)
     end
