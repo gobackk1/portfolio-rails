@@ -23,14 +23,14 @@ class UsersController < ApplicationController
   end
 
   def index
-    selected_users = User.where.not(id: @current_user.id).select(:id, :name, :image_url, :user_bio)
+    selected_users = User.pager(page: params[:page].to_i, per: params[:per].to_i).select(:id, :name, :image_url, :user_bio)
     users = selected_users.map do |user|
       {
         id: user.id,
         name: user.name,
         image_url: user.image_url,
         user_bio: user.user_bio,
-        is_following: @current_user.following?(user)
+        is_following: @current_user.following?(user),
       }
     end
     render json: users
@@ -100,8 +100,11 @@ class UsersController < ApplicationController
   end
 
   def search
+    # Book::ActiveRecord_Relation にはscopeが使えない？
     keyword = params[:keyword]
-    users = User.where.not(id: @current_user.id).where("name LIKE ? OR user_bio LIKE ?", "%#{keyword}%", "%#{keyword}%").select(:id, :name, :image_url, :user_bio)
+    num = params[:page].to_i.positive? ? params[:page].to_i - 1 : 0
+    per = params[:per]
+    users = User.where.not(id: @current_user.id).where("name LIKE ? OR user_bio LIKE ?", "%#{keyword}%", "%#{keyword}%").limit(per).offset(per * num).select(:id, :name, :image_url, :user_bio)
     render json: users
   end
 

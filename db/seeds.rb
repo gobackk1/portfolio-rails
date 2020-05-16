@@ -6,7 +6,7 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-user_count = 20
+user_count = 50
 study_record_count = 10
 study_record_per_user = 10
 tag_list = ["タグ1","タグ2","タグ3","タグ4","タグ5"]

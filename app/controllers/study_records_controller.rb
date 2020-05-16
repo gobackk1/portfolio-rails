@@ -2,7 +2,7 @@ class StudyRecordsController < ApplicationController
   before_action :current_user
 
   def index
-    records = StudyRecord.all.order(id: :DESC)
+    records = StudyRecord.pager(page: params[:page].to_i, per: params[:per].to_i).order(id: :DESC)
     result = records.map do |record|
       process_record_for_response(record)
     end
