@@ -105,7 +105,11 @@ class UsersController < ApplicationController
     num = params[:page].to_i.positive? ? params[:page].to_i - 1 : 0
     per = params[:per]
     users = User.where.not(id: @current_user.id).where("name LIKE ? OR user_bio LIKE ?", "%#{keyword}%", "%#{keyword}%").limit(per).offset(per * num).select(:id, :name, :image_url, :user_bio)
-    render json: users
+    if users.size == 0
+      render json: {messages: ['ユーザーが見つかりませんでした。別のキーワードで検索してください。']}
+    else
+      render json: users
+    end
   end
 
   private
