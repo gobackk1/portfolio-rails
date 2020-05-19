@@ -33,7 +33,7 @@ class UsersController < ApplicationController
         is_following: @current_user.following?(user),
       }
     end
-    render json: users
+    render json: {result: users, not_found: false}
   end
 
   def show
@@ -104,12 +104,10 @@ class UsersController < ApplicationController
     keyword = params[:keyword]
     num = params[:page].to_i.positive? ? params[:page].to_i - 1 : 0
     per = params[:per]
-    users = User.where.not(id: @current_user.id).where("name LIKE ? OR user_bio LIKE ?", "%#{keyword}%", "%#{keyword}%").limit(per).offset(per * num).select(:id, :name, :image_url, :user_bio)
-    if users.size == 0
-      render json: {messages: ['ユーザーが見つかりませんでした。別のキーワードで検索してください。']}
-    else
-      render json: users
-    end
+    users = User.where.not(id: @current_user.id).where("name LIKE ? OR user_bio LIKE ?", "%#{keyword}%", "%#{keyword}%")
+    return render json: {result: [],messages: ['ユーザーが見つかりませんでした。別のキーワードで検索してください。'], not_found: true} if users.size == 0
+    limited_users = users.limit(per).offset(per * num).select(:id, :name, :image_url, :user_bio)
+    render json: {result: limited_users, not_found: false}
   end
 
   private

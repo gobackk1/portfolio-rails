@@ -6,8 +6,7 @@ class StudyRecordsController < ApplicationController
     result = records.map do |record|
       process_record_for_response(record)
     end
-
-    render json: result
+    render json: {result: result, not_found: false}
   end
 
   def show
@@ -59,11 +58,13 @@ class StudyRecordsController < ApplicationController
     keyword = params[:keyword]
     num = params[:page].to_i.positive? ? params[:page].to_i - 1 : 0
     per = params[:per]
-    records = StudyRecord.where("comment LIKE ? OR teaching_material LIKE ?", "%#{keyword}%", "%#{keyword}%").limit(per).offset(per * num).order(id: :DESC)
-    result = records.map do |record|
+    records = StudyRecord.where("comment LIKE ? OR teaching_material LIKE ?", "%#{keyword}%", "%#{keyword}%")
+    return render json: {result: [], messages: ['勉強記録が見つかりませんでした。別のキーワードで検索してください。'], not_found: true} if records.size == 0
+    limited_records = records.limit(per).offset(per * num).order(id: :DESC)
+    result = limited_records.map do |record|
       process_record_for_response(record)
     end
-    render json: result
+    render json: {result: result, not_found: false}
   end
 
   private
