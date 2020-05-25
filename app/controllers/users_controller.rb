@@ -26,13 +26,6 @@ class UsersController < ApplicationController
     selected_users = User.where.not(id: @current_user.id).pager(page: params[:page].to_i, per: params[:per].to_i).select(:id, :name, :image_url, :user_bio, :created_at)
     users = selected_users.map do |user|
       render_profile user
-      # {
-      #   id: user.id,
-      #   name: user.name,
-      #   image_url: user.image_url,
-      #   user_bio: user.user_bio,
-      #   is_following: @current_user.following?(user),
-      # }
     end
     sleep 0.3
     render json: {result: users, not_found: false}
@@ -110,8 +103,11 @@ class UsersController < ApplicationController
     per = params[:per]
     users = User.where.not(id: @current_user.id).where("name LIKE ? OR user_bio LIKE ?", "%#{keyword}%", "%#{keyword}%")
     return render json: {result: [],messages: ['ユーザーが見つかりませんでした。別のキーワードで検索してください。'], not_found: true} if users.size == 0
-    limited_users = users.limit(per).offset(per * num).select(:id, :name, :image_url, :user_bio)
-    render json: {result: limited_users, not_found: false}
+    limited_users = users.limit(per).offset(per * num).select(:id, :name, :image_url, :user_bio, :created_at)
+    result = limited_users.map do |user|
+      render_profile user
+    end
+    render json: {result: result, not_found: false}
   end
 
   private
