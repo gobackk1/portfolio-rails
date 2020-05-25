@@ -20,6 +20,7 @@ class ApplicationController < ActionController::Base
     {
       id: record.id,
       user: {
+        id: record.user.id,
         image_url: record.user.image_url,
         name: record.user.name
       },
