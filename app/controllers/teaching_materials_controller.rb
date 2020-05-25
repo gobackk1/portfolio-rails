@@ -3,6 +3,7 @@ class TeachingMaterialsController < ApplicationController
 
   def index
     materials = TeachingMaterial.where(user_id: params[:user_id])
+    sleep 0.5
     render json: materials
   end
 
