@@ -2,10 +2,15 @@ class StudyRecordsController < ApplicationController
   before_action :current_user
 
   def index
-    records = StudyRecord.pager(page: params[:page].to_i, per: params[:per].to_i).order(id: :DESC)
+    if params[:user_id]
+      records = StudyRecord.where(user_id: params[:user_id].to_i).pager(page: params[:page].to_i, per: params[:per].to_i).order(id: :DESC)
+    else
+      records = StudyRecord.pager(page: params[:page].to_i, per: params[:per].to_i).order(id: :DESC)
+    end
     result = records.map do |record|
       process_record_for_response(record)
     end
+    sleep 0.3
     render json: {result: result, not_found: false}
   end
 
