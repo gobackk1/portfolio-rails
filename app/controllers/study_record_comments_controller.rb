@@ -1,6 +1,4 @@
 class StudyRecordCommentsController < ApplicationController
-  include CommonModule
-
   before_action :current_user
 
   def create
