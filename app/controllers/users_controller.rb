@@ -23,22 +23,26 @@ class UsersController < ApplicationController
   end
 
   def index
-    selected_users = User.pager(page: params[:page].to_i, per: params[:per].to_i).select(:id, :name, :image_url, :user_bio)
+    selected_users = User.where.not(id: @current_user.id).pager(page: params[:page].to_i, per: params[:per].to_i).select(:id, :name, :image_url, :user_bio, :created_at)
     users = selected_users.map do |user|
-      {
-        id: user.id,
-        name: user.name,
-        image_url: user.image_url,
-        user_bio: user.user_bio,
-        is_following: @current_user.following?(user),
-      }
+      render_profile user
+      # {
+      #   id: user.id,
+      #   name: user.name,
+      #   image_url: user.image_url,
+      #   user_bio: user.user_bio,
+      #   is_following: @current_user.following?(user),
+      # }
     end
+    sleep 0.3
     render json: {result: users, not_found: false}
   end
 
   def show
     @user = User.find(params[:id])
-    render_profile @user
+    sleep 0.3
+    data = render_profile @user
+    render json: data
   end
 
   def update
@@ -125,14 +129,10 @@ class UsersController < ApplicationController
 
     def render_profile(user)
       study_records = user.study_records
-      results = study_records.map do |record|
-        process_record_for_response(record)
-      end
       total_study_hours = study_records.sum(:study_hours)
       followings_count = user.followings.count
       followers_count = user.followers.count
-      render json: {
-        # TODO: もっと良い書き方があるはず
+      {
         user: {
           id: user.id,
           user_bio: user.user_bio,
@@ -140,7 +140,6 @@ class UsersController < ApplicationController
           name: user.name
         },
         registered_date: I18n.l(user.created_at, format: '%Y/%m/%d'),
-        study_records: results,
         total_study_hours: total_study_hours,
         followings_count: followings_count,
         followers_count: followers_count,
