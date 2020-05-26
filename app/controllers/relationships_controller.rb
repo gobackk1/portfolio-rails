@@ -5,16 +5,8 @@ class RelationshipsController < ApplicationController
   def create
     following = @current_user.follow(@user)
     if following.save
-      render json: {
-        user: {
-          id: @user.id,
-          is_following: true,
-          image_url: @user.image_url,
-          name: @user.name,
-          user_bio: @user.user_bio
-        },
-        followers_count: @user.followers.count
-      }
+      result = process_user_for_response @user
+      render json: result
     else
       render json: {message: 'ユーザーのフォローに失敗しました'}
     end
@@ -24,16 +16,8 @@ class RelationshipsController < ApplicationController
     following = @current_user.unfollow(@user)
     # TODO: もう一度Destroyする理由を調べる
     if following.destroy
-      render json: {
-        user: {
-          id: @user.id,
-          is_following: false,
-          image_url: @user.image_url,
-          name: @user.name,
-          user_bio: @user.user_bio
-        },
-        followers_count: @user.followers.count
-      }
+      result = process_user_for_response @user
+      render json: result
     else
       render json: {message: 'フォロー解除に失敗しました'}
     end

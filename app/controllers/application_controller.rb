@@ -13,6 +13,26 @@ class ApplicationController < ActionController::Base
     @current_user ||= User.find_by(token: request.headers['Authorization'].split[1])
   end
 
+  def process_user_for_response(user)
+    study_records = user.study_records
+    total_study_hours = study_records.sum(:study_hours)
+    followings_count = user.followings.count
+    followers_count = user.followers.count
+    {
+      user: {
+        id: user.id,
+        user_bio: user.user_bio,
+        image_url: user.image_url,
+        name: user.name
+      },
+      registered_date: I18n.l(user.created_at, format: '%Y/%m/%d'),
+      total_study_hours: total_study_hours,
+      followings_count: followings_count,
+      followers_count: followers_count,
+      is_following: @current_user.following?(user)
+    }
+  end
+
   def process_record_for_response(record)
     comments = record.study_record_comments.map do |c|
       process_comment_for_response(c)

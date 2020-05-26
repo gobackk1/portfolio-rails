@@ -6,7 +6,7 @@ class UsersController < ApplicationController
     user = User.find_by(email: params[:email])
 
     if user && user.authenticate(params[:password])
-      render json: process_user_for_response(user)
+      render json: process_user_for_auth(user)
     else
       render json: {messages: ['メールアドレスかパスワードが間違っているようです。もう一度入力してください。']}, status: 401
     end
@@ -16,7 +16,7 @@ class UsersController < ApplicationController
     user = User.new(user_params)
 
     if user.save
-      render json: process_user_for_response(user)
+      render json: process_user_for_auth(user)
     else
       render json: {messages: user.errors.full_messages}, status: 401
     end
@@ -25,7 +25,7 @@ class UsersController < ApplicationController
   def index
     selected_users = User.where.not(id: @current_user.id).pager(page: params[:page].to_i, per: params[:per].to_i).select(:id, :name, :image_url, :user_bio, :created_at)
     users = selected_users.map do |user|
-      render_profile user
+      process_user_for_response user
     end
     sleep 0.3
     render json: {result: users, not_found: false}
@@ -34,7 +34,7 @@ class UsersController < ApplicationController
   def show
     @user = User.find(params[:id])
     sleep 0.3
-    data = render_profile @user
+    data = process_user_for_response @user
     render json: data
   end
 
@@ -51,7 +51,7 @@ class UsersController < ApplicationController
         File.binwrite("public/api/#{@user.image_url}", Base64.decode64(image))
       end
       if @user.save
-        render_profile @user
+        process_user_for_response @user
       else
         render json: {message: @user.errors.full_messages, user: @user}
       end
@@ -105,7 +105,7 @@ class UsersController < ApplicationController
     return render json: {result: [],messages: ['ユーザーが見つかりませんでした。別のキーワードで検索してください。'], not_found: true} if users.size == 0
     limited_users = users.limit(per).offset(per * num).select(:id, :name, :image_url, :user_bio, :created_at)
     result = limited_users.map do |user|
-      render_profile user
+      process_user_for_response user
     end
     render json: {result: result, not_found: false}
   end
@@ -115,31 +115,11 @@ class UsersController < ApplicationController
       params.permit(:name, :email, :password)
     end
 
-    def process_user_for_response(user)
+    def process_user_for_auth(user)
       {
         id: user.id,
         name: user.name,
         token: user.token,
-      }
-    end
-
-    def render_profile(user)
-      study_records = user.study_records
-      total_study_hours = study_records.sum(:study_hours)
-      followings_count = user.followings.count
-      followers_count = user.followers.count
-      {
-        user: {
-          id: user.id,
-          user_bio: user.user_bio,
-          image_url: user.image_url,
-          name: user.name
-        },
-        registered_date: I18n.l(user.created_at, format: '%Y/%m/%d'),
-        total_study_hours: total_study_hours,
-        followings_count: followings_count,
-        followers_count: followers_count,
-        is_following: @current_user.following?(user)
       }
     end
 end
