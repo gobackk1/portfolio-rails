@@ -28,7 +28,7 @@ class UsersController < ApplicationController
       process_user_for_response user
     end
     sleep 0.3
-    render json: {result: users, not_found: false}
+    render json: {users: users, not_found: false}
   end
 
   def show
@@ -107,7 +107,7 @@ class UsersController < ApplicationController
     result = limited_users.map do |user|
       process_user_for_response user
     end
-    render json: {result: result, not_found: false}
+    render json: {users: result, not_found: false}
   end
 
   private

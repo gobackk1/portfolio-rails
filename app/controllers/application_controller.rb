@@ -19,12 +19,10 @@ class ApplicationController < ActionController::Base
     followings_count = user.followings.count
     followers_count = user.followers.count
     {
-      user: {
-        id: user.id,
-        user_bio: user.user_bio,
-        image_url: user.image_url,
-        name: user.name
-      },
+      id: user.id,
+      user_bio: user.user_bio,
+      image_url: user.image_url,
+      name: user.name,
       registered_date: I18n.l(user.created_at, format: '%Y/%m/%d'),
       total_study_hours: total_study_hours,
       followings_count: followings_count,
