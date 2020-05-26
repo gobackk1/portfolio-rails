@@ -51,7 +51,8 @@ class UsersController < ApplicationController
         File.binwrite("public/api/#{@user.image_url}", Base64.decode64(image))
       end
       if @user.save
-        process_user_for_response @user
+        result = process_user_for_response @user
+        render json: result
       else
         render json: {message: @user.errors.full_messages, user: @user}
       end
