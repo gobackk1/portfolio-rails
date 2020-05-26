@@ -27,13 +27,13 @@ class UsersController < ApplicationController
     users = selected_users.map do |user|
       process_user_for_response user
     end
-    sleep 0.3
+    sleep 0.2
     render json: {users: users, not_found: false}
   end
 
   def show
     @user = User.find(params[:id])
-    sleep 0.3
+    sleep 0.2
     data = process_user_for_response @user
     render json: data
   end
@@ -103,7 +103,7 @@ class UsersController < ApplicationController
     num = params[:page].to_i.positive? ? params[:page].to_i - 1 : 0
     per = params[:per]
     users = User.where.not(id: @current_user.id).where("name LIKE ? OR user_bio LIKE ?", "%#{keyword}%", "%#{keyword}%")
-    return render json: {result: [],messages: ['ユーザーが見つかりませんでした。別のキーワードで検索してください。'], not_found: true} if users.size == 0
+    return render json: {users: [],messages: ['ユーザーが見つかりませんでした。別のキーワードで検索してください。'], not_found: true} if users.size == 0
     limited_users = users.limit(per).offset(per * num).select(:id, :name, :image_url, :user_bio, :created_at)
     result = limited_users.map do |user|
       process_user_for_response user

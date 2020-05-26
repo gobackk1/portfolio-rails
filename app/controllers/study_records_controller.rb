@@ -10,7 +10,7 @@ class StudyRecordsController < ApplicationController
     result = records.map do |record|
       process_record_for_response(record)
     end
-    sleep 0.3
+    sleep 0.2
     render json: {result: result, not_found: false}
   end
 
