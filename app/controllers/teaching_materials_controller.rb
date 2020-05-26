@@ -41,6 +41,7 @@ class TeachingMaterialsController < ApplicationController
 
     if material.user_id == @current_user.id
       if material.destroy
+        FileUtils.rm_rf("public/api/images/user_images/#{material.user_id}/teaching_materials/#{material.id}")
         render json: params[:id]
       end
     else
