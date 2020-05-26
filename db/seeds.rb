@@ -67,7 +67,7 @@ study_record_count.times do |n|
   study_record_per_user.times do |m|
     user.study_records.create(
       comment: comment,
-      teaching_material: t_material[rand(4)],
+      teaching_material_name: t_material[rand(4)],
       study_hours: rand(1..5),
       study_genre_list: genRandomTag(tag_list),
       created_at: "2020-05-#{m + 1} 09:00:00",

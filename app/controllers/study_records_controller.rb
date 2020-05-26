@@ -38,7 +38,7 @@ class StudyRecordsController < ApplicationController
     record = StudyRecord.find(params[:id])
     record.update_attributes(
       comment: params[:comment],
-      teaching_material: params[:teaching_material],
+      teaching_material_name: params[:teaching_material_name],
       study_hours: params[:study_hours],
       study_genre_list: params[:study_genre_list]
     )
@@ -63,7 +63,7 @@ class StudyRecordsController < ApplicationController
     keyword = params[:keyword]
     num = params[:page].to_i.positive? ? params[:page].to_i - 1 : 0
     per = params[:per]
-    records = StudyRecord.where("comment LIKE ? OR teaching_material LIKE ?", "%#{keyword}%", "%#{keyword}%")
+    records = StudyRecord.where("comment LIKE ? OR teaching_material_name LIKE ?", "%#{keyword}%", "%#{keyword}%")
     return render json: {result: [], messages: ['勉強記録が見つかりませんでした。別のキーワードで検索してください。'], not_found: true} if records.size == 0
     limited_records = records.limit(per).offset(per * num).order(id: :DESC)
     result = limited_records.map do |record|
@@ -74,7 +74,7 @@ class StudyRecordsController < ApplicationController
 
   private
     def study_record_params
-      params.permit(:comment, :teaching_material, :study_hours, :study_genre_list)
+      params.permit(:comment, :teaching_material_name, :study_hours, :study_genre_list)
     end
 
     def set_image(record, image)
