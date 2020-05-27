@@ -35,6 +35,10 @@ class ApplicationController < ActionController::Base
     comments = record.study_record_comments.map do |c|
       process_comment_for_response(c)
     end
+    if record.teaching_material
+      record.image_url = record.teaching_material.image_url
+      record.teaching_material_name = record.teaching_material.title
+    end
     {
       id: record.id,
       user: {

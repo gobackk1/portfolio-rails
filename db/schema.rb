@@ -52,7 +52,8 @@ ActiveRecord::Schema.define(version: 2020_05_26_224850) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "image_url", default: "/images/default.png"
-    t.integer "teaching_material_id"
+    t.bigint "teaching_material_id"
+    t.index ["teaching_material_id"], name: "index_study_records_on_teaching_material_id"
   end
 
   create_table "taggings", id: :serial, force: :cascade do |t|
@@ -88,7 +89,8 @@ ActiveRecord::Schema.define(version: 2020_05_26_224850) do
     t.datetime "updated_at", null: false
     t.integer "user_id"
     t.string "image_url", default: "/images/default.png"
-    t.integer "study_record_id"
+    t.bigint "study_record_id"
+    t.index ["study_record_id"], name: "index_teaching_materials_on_study_record_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -111,5 +113,7 @@ ActiveRecord::Schema.define(version: 2020_05_26_224850) do
   add_foreign_key "relationships", "users"
   add_foreign_key "relationships", "users", column: "follow_id"
   add_foreign_key "study_record_comments", "study_records"
+  add_foreign_key "study_records", "teaching_materials"
   add_foreign_key "taggings", "tags"
+  add_foreign_key "teaching_materials", "study_records"
 end

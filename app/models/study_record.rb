@@ -5,7 +5,7 @@ class StudyRecord < ApplicationRecord
   has_many :likes, dependent: :destroy
   belongs_to :user
   acts_as_taggable_on :study_genres
-  has_one :teaching_material
+  belongs_to :teaching_material, optional: true
   # def user
   #   User.find(self.user_id)
   # end

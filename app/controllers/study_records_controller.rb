@@ -22,16 +22,23 @@ class StudyRecordsController < ApplicationController
   def create
     record = StudyRecord.new(study_record_params)
     record.user_id = @current_user.id
-    record.image_url = params[:image_url] if params[:image_url]
-
-    if record.save
+    if params[:material_id] != nil
+      record.teaching_material_id = params[:material_id]
+      # record.image_url = record.teaching_material.image_url
+      # record.teaching_material_name = record.teaching_material.title
+    else
+      record.image_url = params[:image_url] if params[:image_url]
       if params[:image_select]
         set_image record, params[:image_select]
       end
+    end
+    if record.save
       render json: process_record_for_response(record)
     else
       render json: {messages: record.errors.full_message}
     end
+
+
   end
 
   def update
