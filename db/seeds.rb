@@ -63,10 +63,10 @@ Relationship.create(
 
 study_record_count.times do |n|
   user = User.find(n + 1)
-  comment = "コメントのサンプルです。 #{n + 1}"
+  record_comment = "コメントのサンプルです。 #{n + 1}"
   study_record_per_user.times do |m|
     user.study_records.create(
-      comment: comment,
+      record_comment: record_comment,
       teaching_material_name: t_material[rand(4)],
       study_hours: rand(1..5),
       study_genre_list: genRandomTag(tag_list),

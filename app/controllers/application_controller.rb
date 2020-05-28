@@ -41,14 +41,21 @@ class ApplicationController < ActionController::Base
     end
     {
       id: record.id,
+      date: I18n.l(record.created_at),
+      record_comment: record.record_comment,
+      study_hours: record.study_hours,
+      image_url: record.image_url,
+      study_genre_list: record.study_genre_list,
+      teaching_material_id: record.teaching_material_id,
+      teaching_material_name: record.teaching_material_name,
+      created_at: record.created_at,
+      updated_at: record.updated_at,
+      comments: comments,
       user: {
         id: record.user.id,
         image_url: record.user.image_url,
         name: record.user.name
       },
-      date: I18n.l(record.created_at),
-      record: record,
-      comments: comments
     }
   end
 
