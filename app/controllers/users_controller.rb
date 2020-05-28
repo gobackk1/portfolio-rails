@@ -74,13 +74,13 @@ class UsersController < ApplicationController
       }
     end
 
-    teaching_materials = current_user_records.select(:teaching_material).distinct.map do |material|
-      material.teaching_material
+    teaching_materials = current_user_records.select(:teaching_material_name).distinct.map do |material|
+      material.teaching_material_name
     end
     report_by_teaching_material =[]
     teaching_materials.map do |material|
-      study_hours = current_user_records.where(teaching_material: material).sum(:study_hours)
-      report_by_teaching_material << {teaching_material: material, study_hours: study_hours}
+      study_hours = current_user_records.where(teaching_material_name: material).sum(:study_hours)
+      report_by_teaching_material << {teaching_material_name: material, study_hours: study_hours}
     end
     report_by_teaching_material.sort! do |a,b|
       b[:study_hours] <=> a[:study_hours]
@@ -89,7 +89,7 @@ class UsersController < ApplicationController
     render json: {
       study_hours: {
         today: current_user_records.where(created_at: from...Time.now.at_end_of_day).sum(:study_hours),
-        week: current_user_records.sum(:study_hours),
+        week: study_time_per_week.sum {|hash| hash[:study_hour]},
         total: current_user_records.sum(:study_hours)
       },
       study_time_per_week: study_time_per_week,
