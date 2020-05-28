@@ -62,12 +62,16 @@ class ApplicationController < ActionController::Base
   def process_comment_for_response(comment)
     {
       id: comment.id,
+      date: I18n.l(comment.created_at),
+      comment_body: comment.comment_body,
+      created_at: comment.created_at,
+      study_record_id: comment.study_record_id,
+      updated_at: comment.updated_at,
       user: {
+        id: comment.user.id,
         image_url: comment.user.image_url,
         name: comment.user.name
       },
-      date: I18n.l(comment.created_at),
-      comment: comment
     }
   end
 end
