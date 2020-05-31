@@ -65,23 +65,24 @@ class UsersController < ApplicationController
 
   def report
     from = Time.now.at_beginning_of_day
-    # to = (from - 6.day).at_end_of_day
+    to = (Time.now - 6.day).at_end_of_day
     current_user_records = @current_user.study_records
-    study_time_per_week = []
+    weekly_records = current_user_records.where(created_at: 1.week.ago.at_beginning_of_day..Time.now.at_end_of_day)
 
+    study_time_per_week = []
     (0..6).to_a.map do |i|
       study_time_per_week << {
         date: I18n.l(Time.now - (6 - i).days, format: "%m月%d日"),
-        study_hour: current_user_records.where(created_at: (6 - i).day.ago.all_day).sum(:study_hours)
+        study_hour: weekly_records.where(created_at: (6 - i).day.ago.all_day).sum(:study_hours)
       }
     end
 
-    teaching_materials = current_user_records.select(:teaching_material_name).distinct.map do |material|
+    teaching_materials = weekly_records.select(:teaching_material_name).distinct.map do |material|
       material.teaching_material_name
     end
     report_by_teaching_material =[]
     teaching_materials.map do |material|
-      study_hours = current_user_records.where(teaching_material_name: material).sum(:study_hours)
+      study_hours = weekly_records.where(teaching_material_name: material).sum(:study_hours)
       report_by_teaching_material << {teaching_material_name: material, study_hours: study_hours}
     end
     report_by_teaching_material.sort! do |a,b|
@@ -90,12 +91,13 @@ class UsersController < ApplicationController
 
     render json: {
       study_hours: {
-        today: current_user_records.where(created_at: from...Time.now.at_end_of_day).sum(:study_hours),
+        today: weekly_records.where(created_at: from...Time.now.at_end_of_day).sum(:study_hours),
         week: study_time_per_week.sum {|hash| hash[:study_hour]},
         total: current_user_records.sum(:study_hours)
       },
       study_time_per_week: study_time_per_week,
       report_by_teaching_material: report_by_teaching_material,
+      weekly_records: weekly_records
     }
   end
 
