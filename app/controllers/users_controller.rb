@@ -6,6 +6,7 @@ class UsersController < ApplicationController
     user = User.find_by(email: params[:email])
 
     if user && user.authenticate(params[:password])
+      cookies["__study_record_app_token"] = user.token
       render json: process_user_for_auth(user)
     else
       render json: {messages: ['メールアドレスかパスワードが間違っているようです。もう一度入力してください。']}, status: 401
@@ -16,6 +17,7 @@ class UsersController < ApplicationController
     user = User.new(user_params)
 
     if user.save
+      cookies["__study_record_app_token"] = user.token
       render json: process_user_for_auth(user)
     else
       render json: {messages: user.errors.full_messages}, status: 401
