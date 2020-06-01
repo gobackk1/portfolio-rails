@@ -2,19 +2,38 @@ class StudyRecordsController < ApplicationController
   before_action :current_user
 
   def index
-    if StudyRecord.all.size == 0
-      return render json: {records: [], messages: ['まだ勉強記録が登録されていません'], not_found: true}
-    end
-    if params[:user_id]
-      records = StudyRecord.where(user_id: params[:user_id].to_i).pager(page: params[:page].to_i, per: params[:per].to_i).order(id: :DESC)
+    if params[:follow]
+      if StudyRecord.all.size == 0
+        return render json: {records: [], messages: ['まだ勉強記録が登録されていません'], not_found: true}
+      end
+
+      user = User.find(params[:user_id])
+      rel_ids = user.relationships.map do |r|
+        r.follow_id
+      end
+
+      records = StudyRecord.where(user_id: rel_ids).pager(page: params[:page].to_i, per: params[:per].to_i).order(id: :DESC)
+
+      result = records.map do |record|
+        process_record_for_response(record)
+      end
+
+      render json: {records: result, not_found: false}
     else
-      records = StudyRecord.pager(page: params[:page].to_i, per: params[:per].to_i).order(id: :DESC)
+      if StudyRecord.all.size == 0
+        return render json: {records: [], messages: ['まだ勉強記録が登録されていません'], not_found: true}
+      end
+      if params[:user_id]
+        records = StudyRecord.where(user_id: params[:user_id].to_i).pager(page: params[:page].to_i, per: params[:per].to_i).order(id: :DESC)
+      else
+        records = StudyRecord.pager(page: params[:page].to_i, per: params[:per].to_i).order(id: :DESC)
+      end
+      result = records.map do |record|
+        process_record_for_response(record)
+      end
+      sleep 0.2
+      render json: {records: result, not_found: false}
     end
-    result = records.map do |record|
-      process_record_for_response(record)
-    end
-    sleep 0.2
-    render json: {records: result, not_found: false}
   end
 
   def show
